@@ -1,5 +1,69 @@
 {% extends "base.html" %}
 {% block title %}Latest Rates{% endblock %}
 {% block content %}
-<h1>Test</h1>
+<div class="container-lg">
+        <div class="row">
+            <div class="col">
+            </div>
+            <div class="col-6">
+
+<form action="" method="post">
+<div class="mb-3 row">
+    <label for="quantityLatest" class="col-sm-3 col-form-label">Quantity</label>
+    <div class="col-sm-7">
+        <input name="quantity" type="text" class="form-control" id="quantityLatest"  value=1.0>
+    </div>
+</div>
+
+<div class="mb-3 row">
+    <label for="sel1" class="col-sm-3 col-form-label">Currency 1</label>
+    <div class="col-sm-7">
+        <select name="curr1" class="form-control" id="sel1">
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+        <option>4</option>
+      </select>
+    </div>
+</div>
+
+<div class="mb-3 row">
+    <label for="sel2" class="col-sm-3 col-form-label">Currency 2</label>
+    <div class="col-sm-7">
+        <select name="curr2" class="form-control" id="sel2">
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+        <option>4</option>
+      </select>
+    </div>
+</div>
+
+<div class="mb-3 row">
+    <label for="resultLatest" class="col-sm-3 col-form-label">Result</label>
+    <div class="col-sm-7">
+        <input type="text" class="form-control-plaintext" readonly id="resultLatest" value={{test_value}}>
+    </div>
+</div>
+
+    </div>
+            <div class="col">
+            </div>
+        </div>
+
+    </div>
+<div class="container-lg">
+<div class="row justify-content-md-center">
+<div class="col-1">
+    <button type="button submit" class="btn btn-primary">1 -> 2</button>
+</div>
+<div class="col-1">
+    <button type="button" class="btn btn-primary">1 <- 2</button>
+</div>
+<div class="col-1">
+    <button type="button" class="btn btn-secondary">Clear</button>
+</div>
+</div>
+</div>
+</form>
 {% endblock %}

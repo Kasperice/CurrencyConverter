@@ -8,12 +8,15 @@ def home():
     return render_template("index.html")
 
 
-@app.route("/latest")
+@app.route("/latest", methods=["POST", "GET"])
 def latest():
-    return render_template("latest.html")
+    test = ""
+    if request.method == "POST":
+        test = request.form.get('quantity')
+    return render_template("latest.html", test_value=test)
 
 
-@app.route("/historical")
+@app.route("/historical", methods=["POST", "GET"])
 def historical():
     return render_template("historical.html")
 
