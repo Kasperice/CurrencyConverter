@@ -7,6 +7,7 @@ import datetime
 
 c = CurrencyRates()
 choices = [f"{element} - {c.translate_currency_symbol(element)}" for element in list(c.get_latest_rates('EUR').keys())]
+choices.append("EUR - Euro")
 
 
 def display(quantity_field, currency1, currency2, results_field):
