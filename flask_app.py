@@ -20,7 +20,7 @@ def latest():
     curr1 = "EUR"
     curr2 = "PLN"
     if request.method == "POST":
-        quantity = request.form.get('quantity')
+        quantity = request.form.get('quantity').replace(',', '.')
         curr1 = request.form.get('curr1').split()[0]
         curr2 = request.form.get('curr2').split()[0]
         result = ""
@@ -47,7 +47,7 @@ def historical():
     time = 'is'
     if request.method == "POST":
         date = request.form.get('date')
-        quantity = request.form.get('quantity')
+        quantity = request.form.get('quantity').replace(',', '.')
         curr1 = request.form.get('curr1').split()[0]
         curr2 = request.form.get('curr2').split()[0]
         result = ""
