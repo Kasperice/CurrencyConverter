@@ -1,29 +1,33 @@
 {% extends "base.html" %}
-{% block title %}Historical Rater{% endblock %}
+{% block title %}Historical Rates{% endblock %}
 
 {% block content %}
 
 
 <form action="" method="post">
 <div class="container-lg">
-    <div class="row justify-content-md-center">&nbsp;</div>
+    <div class="row justify-content-md-center my-sm-4">
+        <center>
+            <h3>Historical rates</h3>
+        </center>
+    </div>
     <div class="row justify-content-md-center">
-        <div class="col-6">
+        <div class="col-7">
             <div class="mb-3 row"> <!-- Date input -->
                 <label class="col-sm-3 col-form-label" for="date">Date</label>
-                <div class="col-sm-7">
+                <div class="col-sm-8">
                     <input class="form-control" id="date" name="date" placeholder="YYYY-MM-DD" type="text", value={{defaults[3]}}>
                 </div>
             </div>
             <div class="mb-3 row">
                 <label for="quantityLatest" class="col-sm-3 col-form-label">Quantity</label>
-                <div class="col-sm-7">
+                <div class="col-sm-8">
                     <input name="quantity" type="text" class="form-control" id="quantityLatest"  value={{defaults[0]}}>
                 </div>
             </div>
             <div class="mb-3 row">
                 <label for="sel1" class="col-sm-3 col-form-label">Currency 1</label>
-                <div class="col-sm-7">
+                <div class="col-sm-8">
                     <select name="curr1" class="form-control" id="sel1">
                     {% for currency in currencies %}
                         {% if defaults[1] in currency %}
@@ -37,7 +41,7 @@
             </div>
             <div class="mb-3 row">
                 <label for="sel2" class="col-sm-3 col-form-label">Currency 2</label>
-                <div class="col-sm-7">
+                <div class="col-sm-8">
                     <select name="curr2" class="form-control" id="sel2">
                     {% for currency in currencies %}
                         {% if defaults[2] in currency %}
@@ -51,7 +55,7 @@
             </div>
             <div class="mb-3 row">
                 <label for="resultLatest" class="col-sm-3 col-form-label">Result</label>
-                <div class="col-sm-7">
+                <div class="col-sm-8">
                     <label for="resultLatest" class="col-form-label">{{test_value}}</label>
                 </div>
             </div>
@@ -60,13 +64,13 @@
 </div>
 <div class="container-lg">
     <div class="row justify-content-md-center">
-        <div class="col-1">
-            <button type="submit" name="submit_button" class="btn btn-primary">1 -> 2</button>
+        <div class="col-1 mx-sm-4">
+            <button type="submit" name="submit_button" class="btn btn-primary">1 to 2</button>
         </div>
-        <div class="col-1">
-            <button type="submit" name="submit_button2" class="btn btn-primary">1 <- 2</button>
+        <div class="col-1 mx-sm-4">
+            <button type="submit" name="submit_button2" class="btn btn-primary">2 to 1</button>
         </div>
-        <div class="col-1">
+        <div class="col-1 mx-sm-4">
             <button type="submit" name="clear_button" class="btn btn-secondary">Clear</button>
         </div>
     </div>
