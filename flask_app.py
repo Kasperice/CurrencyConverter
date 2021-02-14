@@ -69,5 +69,9 @@ def historical():
         return render_template("historical.html", currencies=choices, defaults=(quantity, curr1, curr2, date))
 
 
+@app.route("/login")
+def login():
+    return render_template("login.html")
+
 if __name__ == "__main__":
     app.run(debug=True)
