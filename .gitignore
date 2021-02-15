@@ -83,3 +83,6 @@ __pycache__
 #Coverage
 htmlcov
 .coverage
+
+#sqlite
+*.sqlite3
