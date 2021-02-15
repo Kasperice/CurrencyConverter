@@ -1,4 +1,36 @@
 {% extends "base.html" %}
 {% block title %}Login{% endblock %}
 {% block content %}
+<form action="" method="post">
+<div class="container-lg">
+    <div class="row justify-content-md-center my-sm-4">
+        <center>
+            <h3>Log in</h3>
+        </center>
+    </div>
+    <div class="row justify-content-md-center">
+        <div class="col-5">
+            <div class="mb-2 row justify-content-md-center">
+                <label for="login" class="col-sm-2 col-form-label">Username</label>
+                <div class="col-sm-6">
+                    <input type="text" id="login" class="form-control" name="username" placeholder="login">
+                </div>
+            </div>
+            <div class="mb-2 row justify-content-md-center">
+                <label for="password" class="col-sm-2 col-form-label">Password</label>
+                <div class="col-sm-6">
+                    <input type="password" id="password" class="form-control" data-toggle="password" name="passw" placeholder="password">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container-lg">
+    <div class="row justify-content-md-center">
+        <div class="col-1 my-sm-4">
+            <button type="submit" name="login_button" class="btn btn-primary">Log In</button>
+        </div>
+    </div>
+</div>
+</form>
 {% endblock %}
