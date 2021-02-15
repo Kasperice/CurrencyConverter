@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Currency converter{% endblock %}
+{% block title %}User{% endblock %}
 {% block content %}
 <div id="alarms" style="position: absolute; width: 99%; z-index: 1; margin-top: 20px">
     <div class="row justify-content-end">
@@ -17,21 +17,5 @@
         </div>
     </div>
 </div>
-<div class="container-lg">
-    <center>
-        <h3 class="my-sm-4">Welcome to Currency Converter!</h3>
-        <p>It is based on <a href="https://exchangeratesapi.io">https://exchangeratesapi.io</a> and built with Flask</p>
-
-        <p>Feel free to check:</p>
-        <div class="row justify-content-md-center">
-            <div class="col-2 mx-sm-4">
-                <a class="btn btn-primary" href="/latest" role="button">Latest rates</a>
-            </div>
-            <div class="col-2 mx-sm-4">
-                <a class="btn btn-primary" href="/historical" role="button">Historical rates</a>
-            </div>
-        </div>
-
-    </center>
-</div>
+<p>Welcome, {{user}}</p>
 {% endblock %}

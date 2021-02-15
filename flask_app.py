@@ -1,8 +1,11 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, session, flash
 from currency_converter import CurrencyRates
 import datetime
+import uuid
 
 app = Flask(__name__)
+app.secret_key = uuid.uuid4().hex
+app.permanent_session_lifetime = datetime.timedelta(days=7)
 
 c = CurrencyRates()
 choices = [f"{element} - {c.translate_currency_symbol(element)}" for element in list(c.get_latest_rates('EUR').keys())]
@@ -81,16 +84,33 @@ def historical():
 @app.route("/login", methods=["POST", "GET"])
 def login():
     if request.method == "POST":
+        session.permanent = True
         user = request.form.get('username')
         passw = request.form.get('pass')
-        return redirect(url_for("user", usr=user))
+        session["user"] = user
+        flash("Login successfull!", "info")
+        return redirect(url_for("user"))
     else:
+        if "user" in session:
+            flash("Already logged in!", "info")
+            return redirect(url_for("user"))
         return render_template("login.html")
 
 
-@app.route("/<usr>")
-def user(usr):
-    return f"<h1>{usr}</h1>"
+@app.route("/user")
+def user():
+    if "user" in session:
+        user = session["user"]
+        return render_template("user.html", user=user)
+    else:
+        return redirect(url_for("login"))
+
+
+@app.route("/logout")
+def logout():
+    session.pop("user", None)
+    flash("You have been logged out!", "success")
+    return redirect(url_for("home"))
 
 
 if __name__ == "__main__":
