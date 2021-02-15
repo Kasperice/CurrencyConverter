@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
 from currency_converter import CurrencyRates
 import datetime
 
@@ -25,9 +25,11 @@ def latest():
         curr2 = request.form.get('curr2').split()[0]
         result = ""
         if 'submit_button' in request.form:
-            result = str(f"{quantity} {curr1} is equal to {float(quantity) * c.get_latest_rate(curr1, curr2):.2f} {curr2}")
+            result = str(f"{quantity} {curr1} is equal to "
+                         f"{float(quantity) * c.get_latest_rate(curr1, curr2):.2f} {curr2}")
         elif 'submit_button2' in request.form:
-            result = str(f"{quantity} {curr2} is equal to {float(quantity) * c.get_latest_rate(curr2, curr1):.2f} {curr1}")
+            result = str(f"{quantity} {curr2} is equal to "
+                         f"{float(quantity) * c.get_latest_rate(curr2, curr1):.2f} {curr1}")
         elif 'clear_button' in request.form:
             result = ""
             quantity = 1.0
@@ -54,9 +56,11 @@ def historical():
         if date != datetime.date.today().strftime("%Y-%m-%d"):
             time = 'was'
         if 'submit_button' in request.form:
-            result = str(f"{quantity} {curr1} {time} equal to {float(quantity) * c.get_historical_rate(curr1, curr2, date):.2f} {curr2}")
+            result = str(f"{quantity} {curr1} {time} equal to "
+                         f"{float(quantity) * c.get_historical_rate(curr1, curr2, date):.2f} {curr2}")
         elif 'submit_button2' in request.form:
-            result = str(f"{quantity} {curr2} {time} equal to {float(quantity) * c.get_historical_rate(curr2, curr1, date):.2f} {curr1}")
+            result = str(f"{quantity} {curr2} {time} equal to "
+                         f"{float(quantity) * c.get_historical_rate(curr2, curr1, date):.2f} {curr1}")
         elif 'clear_button' in request.form:
             result = ""
             quantity = 1.0
@@ -64,14 +68,30 @@ def historical():
             curr2 = "PLN"
             date = datetime.date.today().strftime("%Y-%m-%d")
 
-        return render_template("historical.html", currencies=choices, test_value=result, defaults=(quantity, curr1, curr2, date))
+        return render_template("historical.html",
+                               currencies=choices,
+                               test_value=result,
+                               defaults=(quantity, curr1, curr2, date))
     else:
-        return render_template("historical.html", currencies=choices, defaults=(quantity, curr1, curr2, date))
+        return render_template("historical.html",
+                               currencies=choices,
+                               defaults=(quantity, curr1, curr2, date))
 
 
-@app.route("/login")
+@app.route("/login", methods=["POST", "GET"])
 def login():
-    return render_template("login.html")
+    if request.method == "POST":
+        user = request.form.get('username')
+        passw = request.form.get('pass')
+        return redirect(url_for("user", usr=user))
+    else:
+        return render_template("login.html")
+
+
+@app.route("/<usr>")
+def user(usr):
+    return f"<h1>{usr}</h1>"
+
 
 if __name__ == "__main__":
     app.run(debug=True)
