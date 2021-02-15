@@ -1,21 +1,28 @@
 {% extends "base.html" %}
 {% block title %}User{% endblock %}
 {% block content %}
-<div id="alarms" style="position: absolute; width: 99%; z-index: 1; margin-top: 20px">
-    <div class="row justify-content-end">
-        <div class="col-3 mx-sm-4">
-            {% with messages = get_flashed_messages(with_categories=True) %}
-                {% if messages %}
-                    {% for category, msg in messages %}
-                        <div class="alert alert-{{category}} alert-dismissible fade show" role="alert">
-                            <span>{{ msg }}</span>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                    {% endfor %}
-                {% endif %}
-            {% endwith %}
+
+<div class="container-lg">
+    <div class="row justify-content-md-center my-sm-4">
+        <center>
+            <h3>Welcome {{user}}</h3>
+        </center>
+    </div>
+    <form action="#" method="POST">
+    <div class="row justify-content-md-center">
+        <div class="col-6">
+            <div class="mb-3 row justify-content-between">
+                <label for="email" class="col-sm-2 col-form-label">Edit email</label>
+                <div class="col-sm-5">
+                    <input type="email" name="email" placeholder="Enter Email" value="{{email if email}}"/>
+                </div>
+                <div class="col-sm-3">
+                    <button type="submit" value="submit" name="submit_email" class="btn btn-primary">Update</button>
+                </div>
+            </div>
         </div>
     </div>
+    </form>
 </div>
-<p>Welcome, {{user}}</p>
+
 {% endblock %}
