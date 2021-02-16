@@ -10,20 +10,16 @@ choices = [f"{element} - {c.translate_currency_symbol(element)}" for element in 
 choices.append("EUR - Euro")
 
 
-def display(quantity_field, currency1, currency2, results_field):
+def display(quantity_field, currency1, currency2, results_field, date=None):
     if get_currency_symbol(currency1) != get_currency_symbol(currency2):
-        results_field.configure(text=f"{get_quantity(quantity_field)} {get_currency_symbol(currency1)} is equal to "
-                                     f"{get_quantity(quantity_field) * get_latest_rate(c, currency1, currency2):.2f} "
-                                     f"{get_currency_symbol(currency2)}")
-    else:
-        results_field.configure(text=f"Both currencies are the same, please change one.")
-
-
-def display_hist(quantity_field, currency1, currency2, results_field, date):
-    if get_currency_symbol(currency1) != get_currency_symbol(currency2):
-        results_field.configure(text=f"{get_quantity(quantity_field)} {get_currency_symbol(currency1)} is equal to "
-                                f"{get_quantity(quantity_field) * get_historical_rate(c, currency1, currency2, date):.2f} "
-                                f"{get_currency_symbol(currency2)}")
+        if date:
+            results_field.configure(text=f"{get_quantity(quantity_field)} {get_currency_symbol(currency1)} is equal to "
+                                         f"{get_quantity(quantity_field) * get_historical_rate(c, currency1, currency2, date):.2f} "
+                                         f"{get_currency_symbol(currency2)}")
+        else:
+            results_field.configure(text=f"{get_quantity(quantity_field)} {get_currency_symbol(currency1)} is equal to "
+                                         f"{get_quantity(quantity_field) * get_latest_rate(c, currency1, currency2):.2f} "
+                                         f"{get_currency_symbol(currency2)}")
     else:
         results_field.configure(text=f"Both currencies are the same, please change one.")
 
@@ -175,10 +171,10 @@ tab2_right.columnconfigure(0, weight=1)
 
 ttk.Button(tab2_right,
            text='1 -> 2',
-           command=lambda: display_hist(quantity_history, currency_history_1, currency_history_2, labelTest2, cal)).grid(column=0, row=0)
+           command=lambda: display(quantity_history, currency_history_1, currency_history_2, labelTest2, cal)).grid(column=0, row=0)
 ttk.Button(tab2_right,
            text='1 <- 2',
-           command=lambda: display_hist(quantity_history, currency_history_2, currency_history_1, labelTest2, cal)).grid(column=0, row=1)
+           command=lambda: display(quantity_history, currency_history_2, currency_history_1, labelTest2, cal)).grid(column=0, row=1)
 ttk.Button(tab2_right,
            text='Clear',
            command=lambda: clear(variable2, variable3, labelTest2, quantity_history, cal)).grid(column=0, row=2)
