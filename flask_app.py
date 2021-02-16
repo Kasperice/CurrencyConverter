@@ -20,11 +20,13 @@ class Users(db.Model):
     name = db.Column(db.String(100))
     email = db.Column(db.String(100))
     password = db.Column(db.String(100))
+    query_result = db.Column(db.String(200))
 
-    def __init__(self, name, email, password):
+    def __init__(self, name, email, password, query_result):
         self.name = name
         self.email = email
         self.password = password
+        self.query_result = query_result
 
 
 c = CurrencyRates()
@@ -58,6 +60,14 @@ def latest():
             quantity = 1.0
             curr1 = "EUR"
             curr2 = "PLN"
+
+        if "user" in session and result != "":
+            user = session["user"]
+            found_user = Users.query.filter_by(name=user).first()
+            found_user.query_result += f"{result} | "
+            print(found_user.query_result)
+            db.session.commit()
+
         return render_template("latest.html", currencies=choices, test_value=result, defaults=(quantity, curr1, curr2))
     else:
         return render_template("latest.html", currencies=choices, defaults=(quantity, curr1, curr2))
@@ -112,7 +122,8 @@ def login():
         if 'login_button' in request.form:
             if found_user and found_user.password == passw:
                 session["email"] = found_user.email
-                flash("Login successfull!", "info")
+                session["results"] = found_user.query_result
+                flash("Login successful!", "info")
             elif found_user and found_user.password != passw:
                 flash("Wrong password", "warning")
                 return render_template("login.html", login=user)
@@ -120,7 +131,7 @@ def login():
                 flash("User does not exist, please register first", "warning")
                 return render_template("login.html", login=user)
         elif 'register_button' in request.form:
-            usr = Users(user, None, passw)
+            usr = Users(user, None, passw, "")
             db.session.add(usr)
             db.session.commit()
             flash("Registered successfully!", "info")
