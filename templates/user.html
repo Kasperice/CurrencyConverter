@@ -1,7 +1,30 @@
 {% extends "base.html" %}
 {% block title %}User{% endblock %}
-{% block content %}
 
+{% block header %}
+<nav class="navbar navbar-expand-lg navbar-light" style="background-color: #e3f2fd;">
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <ul class="nav navbar-nav" mr-auto>
+                <li><a class="nav-link" href="/">Home</a></li>
+                <li><a class="nav-link" href="latest">Latest Rates</a></li>
+                <li><a class="nav-link" href="historical">Historical Rates</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right" ml-auto>
+                {% if logged %}
+                <li><a class="nav-link active" href="user">Your profile</a></li>
+                <li><a class="nav-link" href="logout">Logout</a></li>
+                {% else %}
+                <li><a class="nav-link" href="login">Login</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+{% endblock %}
+
+{% block content %}
 <div class="container-lg">
     <div class="row justify-content-md-center my-sm-4">
         <center>
@@ -27,9 +50,28 @@
         <center>
             <h3>Your conversion history</h3>
         </center>
-        {% for search in searches %}
-            <p>{{search}}</p>
+
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Search date</th>
+              <th scope="col">Conversion</th>
+              <th scope="col">Rate date</th>
+            </tr>
+          </thead>
+          <tbody>
+        {% for date, list in searches.items() %}
+            <tr>
+              <th scope="row">{{loop.index}}</th>
+              <td>{{date}}</td>
+              <td>{{list[0]}}</td>
+              <td>{{list[1]}}</td>
+            </tr>
         {% endfor %}
+          </tbody>
+        </table>
+
     </div>
 </div>
 
