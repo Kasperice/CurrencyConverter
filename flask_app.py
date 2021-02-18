@@ -80,16 +80,20 @@ def latest():
             found_user.query_result = f"[{date_time}] {result} on {date} | " + found_user.query_result
             db.session.commit()
 
-        return render_template("latest.html",
-                               currencies=choices,
-                               test_value=result,
-                               defaults=(quantity, curr1, curr2),
-                               logged="user" in session)
+        parameters = {
+            'currencies': choices,
+            'test_value': result,
+            'defaults': (quantity, curr1, curr2),
+            'logged': "user" in session
+        }
+        return render_template("latest.html", **parameters)
     else:
-        return render_template("latest.html",
-                               currencies=choices,
-                               defaults=(quantity, curr1, curr2),
-                               logged="user" in session)
+        parameters = {
+            'currencies': choices,
+            'defaults': (quantity, curr1, curr2),
+            'logged': "user" in session
+        }
+        return render_template("latest.html", **parameters)
 
 
 @app.route("/historical", methods=["POST", "GET"])
@@ -127,16 +131,21 @@ def historical():
             found_user.query_result = f"[{date_time}] {result} on {historical_date} | " + found_user.query_result
             db.session.commit()
 
-        return render_template("historical.html",
-                               currencies=choices,
-                               test_value=result,
-                               defaults=(quantity, curr1, curr2, date),
-                               logged="user" in session)
+        parameters = {
+            'currencies': choices,
+            'test_value': result,
+            'defaults': (quantity, curr1, curr2, date),
+            'logged': "user" in session
+        }
+
+        return render_template("historical.html", **parameters)
     else:
-        return render_template("historical.html",
-                               currencies=choices,
-                               defaults=(quantity, curr1, curr2, date),
-                               logged="user" in session)
+        parameters = {
+            'currencies': choices,
+            'defaults': (quantity, curr1, curr2, date),
+            'logged': "user" in session
+        }
+        return render_template("historical.html", **parameters)
 
 
 @app.route("/login", methods=["POST", "GET"])
@@ -154,12 +163,10 @@ def login():
                 flash("Login successful!", "info")
             elif found_user and found_user.password != passw:
                 flash("Wrong password", "warning")
-                return render_template("login.html",
-                                       login=user)
+                return render_template("login.html", login=user)
             else:
                 flash("User does not exist, please register first", "warning")
-                return render_template("login.html",
-                                       login=user)
+                return render_template("login.html", login=user)
         elif 'register_button' in request.form:
             usr = Users(user, None, passw, "")
             db.session.add(usr)
@@ -179,25 +186,22 @@ def user():
     email = None
     if "user" in session:
         user = session["user"]
-        if request.method == "POST":
-            email = request.form.get("email")
-            session["email"] = email
-            found_user = Users.query.filter_by(name=user).first()
-            found_user.email = email
+        found_user = Users.query.filter_by(name=user).first()
+        if request.method == "POST" and 'clear_button' in request.form:
+            found_user.query_result = ''
             db.session.commit()
-            flash("Email was saved.", "info")
-        else:
-            if "email" in session:
-                email = session["email"]
 
         found_user = Users.query.filter_by(name=user).first()
         results = divide_entries(found_user.query_result, 15)
 
-        return render_template("user.html",
-                               user=user,
-                               email=email,
-                               searches=results,
-                               logged="user" in session)
+        parameters = {
+            'user': user,
+            'email': email,
+            'searches': results,
+            'logged': "user" in session
+        }
+
+        return render_template("user.html", **parameters)
     else:
         return redirect(url_for("login"))
 
@@ -212,9 +216,11 @@ def logout():
 
 @app.route("/view")
 def view():
-    return render_template("view.html",
-                           values=Users.query.all(),
-                           logged="user" in session)
+    parameters = {
+        'values': Users.query.all(),
+        'logged': "user" in session
+    }
+    return render_template("view.html", **parameters)
 
 
 if __name__ == "__main__":
