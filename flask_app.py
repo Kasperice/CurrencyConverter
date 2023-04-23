@@ -8,7 +8,7 @@ import re
 
 app = Flask(__name__)
 app.secret_key = uuid.uuid4().hex
-app.config["SQLALCHEMY_DATABASE_URI"] = 'sqlite:///users.sqlite3'
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///users.sqlite3"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.permanent_session_lifetime = datetime.timedelta(days=7)
 
@@ -40,14 +40,16 @@ def divide_entries(data, number_of_entries):
 
 
 c = CurrencyRates()
-choices = [f"{element} - {c.translate_currency_symbol(element)}" for element in list(c.get_latest_rates('EUR').keys())]
+choices = [
+    f"{element} - {c.translate_currency_symbol(element)}"
+    for element in list(c.get_latest_rates("EUR").keys())
+]
 choices.append("EUR - Euro")
 
 
 @app.route("/")
 def home():
-    return render_template("index.html",
-                           logged="user" in session)
+    return render_template("index.html", logged="user" in session)
 
 
 @app.route("/latest", methods=["POST", "GET"])
@@ -56,17 +58,21 @@ def latest():
     curr1 = "EUR"
     curr2 = "PLN"
     if request.method == "POST":
-        quantity = request.form.get('quantity').replace(',', '.')
-        curr1 = request.form.get('curr1').split()[0]
-        curr2 = request.form.get('curr2').split()[0]
+        quantity = request.form.get("quantity").replace(",", ".")
+        curr1 = request.form.get("curr1").split()[0]
+        curr2 = request.form.get("curr2").split()[0]
         result = ""
-        if 'submit_button' in request.form:
-            result = str(f"{quantity} {curr1} is equal to "
-                         f"{float(quantity) * c.get_latest_rate(curr1, curr2):.2f} {curr2}")
-        elif 'submit_button2' in request.form:
-            result = str(f"{quantity} {curr2} is equal to "
-                         f"{float(quantity) * c.get_latest_rate(curr2, curr1):.2f} {curr1}")
-        elif 'clear_button' in request.form:
+        if "submit_button" in request.form:
+            result = str(
+                f"{quantity} {curr1} is equal to "
+                f"{float(quantity) * c.get_latest_rate(curr1, curr2):.2f} {curr2}"
+            )
+        elif "submit_button2" in request.form:
+            result = str(
+                f"{quantity} {curr2} is equal to "
+                f"{float(quantity) * c.get_latest_rate(curr2, curr1):.2f} {curr1}"
+            )
+        elif "clear_button" in request.form:
             result = ""
             quantity = 1.0
             curr1 = "EUR"
@@ -77,21 +83,23 @@ def latest():
             found_user = Users.query.filter_by(name=user).first()
             date_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             date = datetime.date.today().strftime("%Y-%m-%d")
-            found_user.query_result = f"[{date_time}] {result} on {date} | " + found_user.query_result
+            found_user.query_result = (
+                f"[{date_time}] {result} on {date} | " + found_user.query_result
+            )
             db.session.commit()
 
         parameters = {
-            'currencies': choices,
-            'test_value': result,
-            'defaults': (quantity, curr1, curr2),
-            'logged': "user" in session
+            "currencies": choices,
+            "test_value": result,
+            "defaults": (quantity, curr1, curr2),
+            "logged": "user" in session,
         }
         return render_template("latest.html", **parameters)
     else:
         parameters = {
-            'currencies': choices,
-            'defaults': (quantity, curr1, curr2),
-            'logged': "user" in session
+            "currencies": choices,
+            "defaults": (quantity, curr1, curr2),
+            "logged": "user" in session,
         }
         return render_template("latest.html", **parameters)
 
@@ -102,22 +110,26 @@ def historical():
     curr1 = "EUR"
     curr2 = "PLN"
     date = datetime.date.today().strftime("%Y-%m-%d")
-    time = 'is'
+    time = "is"
     if request.method == "POST":
-        historical_date = request.form.get('date')
-        quantity = request.form.get('quantity').replace(',', '.')
-        curr1 = request.form.get('curr1').split()[0]
-        curr2 = request.form.get('curr2').split()[0]
+        historical_date = request.form.get("date")
+        quantity = request.form.get("quantity").replace(",", ".")
+        curr1 = request.form.get("curr1").split()[0]
+        curr2 = request.form.get("curr2").split()[0]
         result = ""
         if historical_date != datetime.date.today().strftime("%Y-%m-%d"):
-            time = 'was'
-        if 'submit_button' in request.form:
-            result = str(f"{quantity} {curr1} {time} equal to "
-                         f"{float(quantity) * c.get_historical_rate(curr1, curr2, historical_date):.2f} {curr2}")
-        elif 'submit_button2' in request.form:
-            result = str(f"{quantity} {curr2} {time} equal to "
-                         f"{float(quantity) * c.get_historical_rate(curr2, curr1, historical_date):.2f} {curr1}")
-        elif 'clear_button' in request.form:
+            time = "was"
+        if "submit_button" in request.form:
+            result = str(
+                f"{quantity} {curr1} {time} equal to "
+                f"{float(quantity) * c.get_historical_rate(curr1, curr2, historical_date):.2f} {curr2}"
+            )
+        elif "submit_button2" in request.form:
+            result = str(
+                f"{quantity} {curr2} {time} equal to "
+                f"{float(quantity) * c.get_historical_rate(curr2, curr1, historical_date):.2f} {curr1}"
+            )
+        elif "clear_button" in request.form:
             result = ""
             quantity = 1.0
             curr1 = "EUR"
@@ -128,22 +140,25 @@ def historical():
             user = session["user"]
             found_user = Users.query.filter_by(name=user).first()
             date_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            found_user.query_result = f"[{date_time}] {result} on {historical_date} | " + found_user.query_result
+            found_user.query_result = (
+                f"[{date_time}] {result} on {historical_date} | "
+                + found_user.query_result
+            )
             db.session.commit()
 
         parameters = {
-            'currencies': choices,
-            'test_value': result,
-            'defaults': (quantity, curr1, curr2, date),
-            'logged': "user" in session
+            "currencies": choices,
+            "test_value": result,
+            "defaults": (quantity, curr1, curr2, date),
+            "logged": "user" in session,
         }
 
         return render_template("historical.html", **parameters)
     else:
         parameters = {
-            'currencies': choices,
-            'defaults': (quantity, curr1, curr2, date),
-            'logged': "user" in session
+            "currencies": choices,
+            "defaults": (quantity, curr1, curr2, date),
+            "logged": "user" in session,
         }
         return render_template("historical.html", **parameters)
 
@@ -152,11 +167,11 @@ def historical():
 def login():
     if request.method == "POST":
         session.permanent = True
-        user = request.form.get('username')
-        passw = hashlib.md5(request.form.get('passw').encode()).hexdigest()
+        user = request.form.get("username")
+        passw = hashlib.md5(request.form.get("passw").encode()).hexdigest()
         session["user"] = user
         found_user = Users.query.filter_by(name=user).first()
-        if 'login_button' in request.form:
+        if "login_button" in request.form:
             if found_user and found_user.password == passw:
                 session["email"] = found_user.email
                 session["results"] = found_user.query_result
@@ -167,7 +182,7 @@ def login():
             else:
                 flash("User does not exist, please register first", "warning")
                 return render_template("login.html", login=user)
-        elif 'register_button' in request.form:
+        elif "register_button" in request.form:
             usr = Users(user, None, passw, "")
             db.session.add(usr)
             db.session.commit()
@@ -187,18 +202,18 @@ def user():
     if "user" in session:
         user = session["user"]
         found_user = Users.query.filter_by(name=user).first()
-        if request.method == "POST" and 'clear_button' in request.form:
-            found_user.query_result = ''
+        if request.method == "POST" and "clear_button" in request.form:
+            found_user.query_result = ""
             db.session.commit()
 
         found_user = Users.query.filter_by(name=user).first()
         results = divide_entries(found_user.query_result, 15)
 
         parameters = {
-            'user': user,
-            'email': email,
-            'searches': results,
-            'logged': "user" in session
+            "user": user,
+            "email": email,
+            "searches": results,
+            "logged": "user" in session,
         }
 
         return render_template("user.html", **parameters)
@@ -216,14 +231,12 @@ def logout():
 
 @app.route("/view")
 def view():
-    parameters = {
-        'values': Users.query.all(),
-        'logged': "user" in session
-    }
+    parameters = {"values": Users.query.all(), "logged": "user" in session}
     return render_template("view.html", **parameters)
 
 
 if __name__ == "__main__":
-    db.create_all()
-    # db.drop_all()
-    app.run(debug=True)
+    with app.app_context():
+        db.create_all()
+        # db.drop_all()
+        app.run(debug=True)
