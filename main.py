@@ -1,16 +1,15 @@
 import tkinter as tk
 from tkinter import ttk
-from currency_converter import CurrencyRates
+from currency_converter import CurrencyRatesAPIConnection
 from tkcalendar import DateEntry
 import datetime
 
 
-c = CurrencyRates()
+c = CurrencyRatesAPIConnection()
 choices = [
-    f"{element} - {c.translate_currency_symbol(element)}"
-    for element in list(c.get_latest_rates("EUR").keys())
+    f"{currency} - {currency_name}"
+    for currency, currency_name in c.get_currency_names_and_symbols().items()
 ]
-choices.append("EUR - Euro")
 
 
 def display(quantity_field, currency1, currency2, results_field, date=None):
@@ -52,13 +51,13 @@ def get_currency_symbol(field):
 
 
 def get_latest_rate(converter, currency1, currency2):
-    return converter.get_latest_rate(
+    return converter.get_exchange_rate(
         get_currency_symbol(currency1), get_currency_symbol(currency2)
     )
 
 
 def get_historical_rate(converter, currency1, currency2, date):
-    return converter.get_historical_rate(
+    return converter.get_exchange_rate(
         get_currency_symbol(currency1), get_currency_symbol(currency2), get_date(date)
     )
 

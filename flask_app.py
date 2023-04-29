@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
-from currency_converter import CurrencyRates
+from currency_converter import CurrencyRatesAPIConnection
 from flask_sqlalchemy import SQLAlchemy
 import datetime
 import uuid
@@ -39,12 +39,11 @@ def divide_entries(data, number_of_entries):
     return results
 
 
-c = CurrencyRates()
+c = CurrencyRatesAPIConnection()
 choices = [
-    f"{element} - {c.translate_currency_symbol(element)}"
-    for element in list(c.get_latest_rates("EUR").keys())
+    f"{currency} - {currency_name}"
+    for currency, currency_name in c.get_currency_names_and_symbols().items()
 ]
-choices.append("EUR - Euro")
 
 
 @app.route("/")
@@ -65,12 +64,12 @@ def latest():
         if "submit_button" in request.form:
             result = str(
                 f"{quantity} {curr1} is equal to "
-                f"{float(quantity) * c.get_latest_rate(curr1, curr2):.2f} {curr2}"
+                f"{float(quantity) * c.get_exchange_rate(curr1, curr2):.2f} {curr2}"
             )
         elif "submit_button2" in request.form:
             result = str(
                 f"{quantity} {curr2} is equal to "
-                f"{float(quantity) * c.get_latest_rate(curr2, curr1):.2f} {curr1}"
+                f"{float(quantity) * c.get_exchange_rate(curr2, curr1):.2f} {curr1}"
             )
         elif "clear_button" in request.form:
             result = ""
@@ -122,12 +121,12 @@ def historical():
         if "submit_button" in request.form:
             result = str(
                 f"{quantity} {curr1} {time} equal to "
-                f"{float(quantity) * c.get_historical_rate(curr1, curr2, historical_date):.2f} {curr2}"
+                f"{float(quantity) * c.get_exchange_rate(curr1, curr2, historical_date):.2f} {curr2}"
             )
         elif "submit_button2" in request.form:
             result = str(
                 f"{quantity} {curr2} {time} equal to "
-                f"{float(quantity) * c.get_historical_rate(curr2, curr1, historical_date):.2f} {curr1}"
+                f"{float(quantity) * c.get_exchange_rate(curr2, curr1, historical_date):.2f} {curr1}"
             )
         elif "clear_button" in request.form:
             result = ""

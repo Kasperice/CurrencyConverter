@@ -6,48 +6,47 @@ import os
 load_dotenv()
 
 
-class CurrencyRates:
+class CurrencyRatesAPIConnection:
     source_address = "https://api.apilayer.com/exchangerates_data/"
-    currency_names_json = "https://api.apilayer.com/exchangerates_data/symbols"
 
     def __init__(self):
         self.headers = {"apikey": os.environ.get("API_KEY")}
+
+    def get_currency_names_and_symbols(self):
         response = requests.request(
-            "GET", url=f"{self.currency_names_json}", headers=self.headers
+            "GET", url=f"{self.source_address}symbols", headers=self.headers
         )
         if response.status_code == 200:
-            self.names = response.json()
-
-    def get_latest_rates(self, currency=None):
-        response = requests.request(
-            "GET", url=f"{self.source_address}latest", headers=self.headers
-        )
-        if currency:
-            response = requests.request(
-                "GET",
-                url=f"{self.source_address}latest?symbols=&base={currency}",
-                headers=self.headers,
+            return response.json()["symbols"]
+        else:
+            raise ValueError(
+                f"Wrong status code. Expected: 200, Actual {response.status_code}"
             )
-        if response.status_code == 200:
-            return response.json().get("rates", {})
 
-    def translate_currency_symbol(self, currency):
-        return self.names["symbols"][currency]
+    def get_exchange_rate(self, first_currency, second_currency, date=None):
+        if date is None:
+            url = f"{self.source_address}latest?base={first_currency}&symbols={second_currency}"
+        else:
+            url = f"{self.source_address}{date}?base={first_currency}&symbols={second_currency}"
 
-    def get_latest_rate(self, first_currency, second_currency):
         response = requests.request(
-            "GET",
-            url=f"{self.source_address}latest?base={first_currency}&symbols={second_currency}",
+            method="GET",
+            url=url,
             headers=self.headers,
         )
-        if response.status_code == 200:
-            return response.json().get("rates", {})[second_currency]
 
-    def get_historical_rate(self, first_currency, second_currency, date):
-        response = requests.request(
-            "GET",
-            f"{self.source_address}{date}?base={first_currency}&symbols={second_currency}",
-            headers=self.headers,
-        )
+        # print("A"*50)
+        # print(response.json().get("rates", {}))
+        # print("B" * 50)
+        # print(response.json().get("rates", {})[second_currency])
+        # print("C" * 50)
+        # print(url)
+        # print(response.json())
+        # print("D" * 50)
+
         if response.status_code == 200:
             return response.json().get("rates", {})[second_currency]
+        else:
+            raise ValueError(
+                f"Wrong status code. Expected: 200, Actual {response.status_code}"
+            )
