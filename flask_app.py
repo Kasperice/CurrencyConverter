@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
-from currency_converter import CurrencyRatesAPIConnection
+from currency_converter.currency_converter import CurrencyRatesAPIConnection
 from flask_sqlalchemy import SQLAlchemy
 import datetime
 import uuid

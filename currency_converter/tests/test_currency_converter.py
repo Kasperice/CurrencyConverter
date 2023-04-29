@@ -1,7 +1,7 @@
 import pytest
 import responses
 
-from currency_converter import CurrencyRatesAPIConnection
+from currency_converter.currency_converter import CurrencyRatesAPIConnection
 
 
 @responses.activate

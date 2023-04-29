@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
-from currency_converter import CurrencyRatesAPIConnection
+from currency_converter.currency_converter import CurrencyRatesAPIConnection
 from tkcalendar import DateEntry
 import datetime
 
