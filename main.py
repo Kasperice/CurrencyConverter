@@ -73,8 +73,8 @@ def get_quantity(field):
 
 
 form = tk.Tk()
-form.title("Kasper's currency converter")
-form.geometry("500x200")
+form.title("Currency converter")
+form.geometry("500x300")
 tab_parent = ttk.Notebook(form)
 tab1 = ttk.Frame(tab_parent)
 tab2 = ttk.Frame(tab_parent)

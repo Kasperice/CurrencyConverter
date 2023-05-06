@@ -35,15 +35,6 @@ class CurrencyRatesAPIConnection:
             headers=self.headers,
         )
 
-        # print("A"*50)
-        # print(response.json().get("rates", {}))
-        # print("B" * 50)
-        # print(response.json().get("rates", {})[second_currency])
-        # print("C" * 50)
-        # print(url)
-        # print(response.json())
-        # print("D" * 50)
-
         if response.status_code == 200:
             return response.json().get("rates", {})[second_currency]
         else:
